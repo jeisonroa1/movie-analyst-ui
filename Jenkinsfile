@@ -1,6 +1,9 @@
 pipeline {
   agent any
-    tools {nodejs "NodeJs"}
+  triggers {
+    githubPush()
+  }
+  tools {nodejs "NodeJs"}
     stages {
         stage('Checkout') {
             steps {
@@ -12,14 +15,14 @@ pipeline {
         stage('Build') { 
             steps {
                 echo 'Build...'
-                sh 'cd UI; npm install'
+                sh 'cd UI; npm install -g mocha; npm install --production=false'
             }
              
         }
         stage('Test') {
             steps {
                 echo 'Testing...'
-                sh 'npm test'
+				sh 'cd UI; npm test'
             }
             
         }
