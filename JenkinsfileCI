@@ -26,7 +26,6 @@ pipeline {
                 sh 'cd UI; npm test'
                 sh 'killall -9 node'
             }
-
         }
     }
 }
