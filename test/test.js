@@ -1,5 +1,4 @@
 process.env.NODE_ENV = "test";
-var backendHost = process.env.BACK_HOST || 'localhost';
 
 //Require the dev-dependencies
 let chai = require("chai");
@@ -7,7 +6,6 @@ let chaiHttp = require("chai-http");
 let expect = require("chai").expect;
 let should = chai.should();
 let server = require('../server');
-let host = 'http://'+backendHost+':3030';
 
 
 chai.use(chaiHttp);

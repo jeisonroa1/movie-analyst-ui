@@ -22,13 +22,12 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing...'
-				//Uncomment to test with production backend. Remember defining ENV VAR and elb backend security group
-				//sh 'cd UI; npm test'
+				sh 'cd UI; npm test'
 				
-				//Remember to comment this if uncommenting the above
-				sh 'rm -rf API; git clone https://github.com/jeisonroa1/movie-analyst-api.git API; cd API; git checkout nosql; npm install; nohup node server.js &'
-                sh 'cd UI; npm test'
-                sh 'killall -9 node'
+				//To run with a mocked backend.
+				//sh 'rm -rf API; git clone https://github.com/jeisonroa1/movie-analyst-api.git API; cd API; git checkout nosql; npm install; nohup node server.js &'
+                //sh 'cd UI; npm test'
+                //sh 'killall -9 node'
             }
 
         }
