@@ -8,7 +8,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Checkout...'
-                sh 'rm -rf UI; git clone https://github.com/LabregoPT/movie-analyst-ui.git UI'
+                sh 'rm -rf UI; git clone https://github.com/jeisonroa1/movie-analyst-ui.git UI'
             }
 
         }
@@ -22,10 +22,32 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing...'
-                sh 'rm -rf API; git clone https://github.com/jeisonroa1/movie-analyst-api.git API; cd API; git checkout nosql; npm install; nohup node server.js &'
+				//Uncomment to test with production backend. Remember defining ENV VAR and elb backend security group
+				//sh 'cd UI; npm test'
+				
+				//Remember to comment this if uncommenting the above
+				sh 'rm -rf API; git clone https://github.com/jeisonroa1/movie-analyst-api.git API; cd API; git checkout nosql; npm install; nohup node server.js &'
                 sh 'cd UI; npm test'
                 sh 'killall -9 node'
             }
+
         }
-    }
+		stage('Artifact Creation') {
+            steps {
+                echo 'Creating Artifact...'
+				sh 'rm -f UI.zip'
+				script {zip zipFile: 'UI.zip', archive:false, dir:'UI'}
+            }
+        }
+		stage('Artifact Upload') {
+            steps {
+                echo 'Uploading'
+				withAWS(){
+					s3Upload(file:'UI.zip', bucket:'rampupartifactrepo')
+				}
+				echo 'Uploaded'
+            }
+			
+        }
+    }	
 }
